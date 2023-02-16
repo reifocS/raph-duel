@@ -31,21 +31,21 @@ export class AiPlayer extends Player {
     }
 }
 
-function evaluate(game: Game, maximizingPlayer: Player, minimizingPlayer: Player): number {
+function evaluate(game: Game): number {
     if (game.player_one.pv <= 0) {
-        return Number.NEGATIVE_INFINITY;
-    }
-    if (game.player_two.pv <= 0) {
         return Number.POSITIVE_INFINITY;
     }
-    const maximizingPlayerScore = maximizingPlayer.pv;
-    const minimizingPlayerScore = minimizingPlayer.pv;
+    if (game.player_two.pv <= 0) {
+        return Number.NEGATIVE_INFINITY;
+    }
+    const maximizingPlayerScore = game.player_two.pv;
+    const minimizingPlayerScore = game.player_one.pv;
     return maximizingPlayerScore - minimizingPlayerScore;
 }
 
 function minmax(game: Game, depth: number, isMaximizing: boolean): number {
     if (depth === 0 || game.check_end()) {
-        return evaluate(game, game.player_two, game.player_one);
+        return evaluate(game);
     }
 
     if (isMaximizing) {
@@ -73,6 +73,7 @@ function minmax(game: Game, depth: number, isMaximizing: boolean): number {
     }
 }
 
+//Todo add alpha-beta pruning
 export class AiPlayerMinMax extends AiPlayer {
 
     constructor() {
@@ -82,7 +83,6 @@ export class AiPlayerMinMax extends AiPlayer {
     choose_card(game: Game): number {
         let bestValue = Number.NEGATIVE_INFINITY;
         let bestCard = this.cards[0];
-        console.log(this.cards)
         for (const card of game.player_one.cards) {
             for (const card_two of this.cards) {
                 const newGame = game.deep_copy()
