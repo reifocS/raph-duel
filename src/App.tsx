@@ -4,6 +4,7 @@ import "./App.css";
 import Card from "./Card";
 // import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { motion } from "framer-motion";
+import Stacking from "./Stacking";
 
 function Board({
   cards,
@@ -20,22 +21,9 @@ function Board({
 
   return (
     <>
-      <div className="flex mb-2 gap-3">
+      <div className="flex mb-2 gap-2">
         {board.map((b, i) => (
-          <ul
-            className="border-2 border-solid p-4 flex gap-2 min-h-[80px]"
-            key={i}
-          >
-            {b.map((c) => (
-              <motion.li
-                layoutId={"board" + c + interactive}
-                className="border-2 p-2 bg-slate-600 text-white"
-                key={c}
-              >
-                {c}
-              </motion.li>
-            ))}
-          </ul>
+          <Stacking key={i} cards={b} index={i} player={interactive} />
         ))}
       </div>
       <div className="flex flex-wrap gap-2 w-full items-center justify-center mb-2">

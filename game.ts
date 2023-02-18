@@ -165,27 +165,17 @@ export class Game {
     }
 }
 
+type PayoffMatrix = number[][];
 
-const examplePayOff = [
-    [[0, 0], [-1, 1], [-2, 2], [-3, 3], [-4, 4], [0, 0]],
-    [[1, -1], [0, 0], [-1, 1], [-2, 2], [-3, 3], [0, 0]],
-    [[2, -2], [1, -1], [0, 0], [-1, 1], [-2, 2], [0, 0]],
-    [[3, -3], [2, -2], [1, -1], [0, 0], [-1, 1], [0, 0]],
-    [[4, -4], [3, -3], [2, -2], [1, -1], [0, 0], [0, 0]],
-    [[0, 0], [0, 0], [0, 0], [0, 0], [0, 0], [0, 0]]]
-
-type PayoffMatrix = number[][][];
 
 export function getPayOffMatrix(game: Game): PayoffMatrix {
     // Set up the payoff matrix
     const n = cards.length
-    const payoffMatrix = Array(n)
+    const payoffMatrix: PayoffMatrix = Array(n)
         .fill(0)
         .map(() =>
             Array(n)
-                .fill(0)
-                .map(() => [0, 0])
-        );
+                .fill(0));
 
     // Compute payoffs for each combination of moves
     for (let i = 0; i < n; i++) {
@@ -197,13 +187,12 @@ export function getPayOffMatrix(game: Game): PayoffMatrix {
 
                 // Compute payoffs for each player based on the simulation
                 const playerOnePayoff = simGame.player_one.pv - simGame.player_two.pv;
-                const playerTwoPayoff = simGame.player_two.pv - simGame.player_one.pv;
 
                 // Update the payoff matrix
-                payoffMatrix[i][j] = [playerOnePayoff, playerTwoPayoff];
+                payoffMatrix[i][j] = playerOnePayoff;
             } else {
                 // Impossible move
-                payoffMatrix[i][j] = [Number.NEGATIVE_INFINITY, Number.NEGATIVE_INFINITY];
+                payoffMatrix[i][j] = Number.NEGATIVE_INFINITY
 
             }
 
@@ -213,4 +202,47 @@ export function getPayOffMatrix(game: Game): PayoffMatrix {
     return payoffMatrix;
 
 
+}
+
+function doubleOracle(payoffMatrix: PayoffMatrix): [number, number] {
+    // Initialize players' sets of possible moves
+    const numMoves = payoffMatrix.length;
+    const player1Moves = new Set<number>(Array.from({ length: numMoves }, (_, i) => i));
+    const player2Moves = new Set<number>(Array.from({ length: numMoves }, (_, i) => i));
+
+    // Iterate until a stable outcome is reached
+    while (true) {
+        // Find player 1's best response to player 2's moves
+        const bestResponse1 = Array.from(player1Moves).reduce(
+            (bestMove, move) =>
+                Math.max(
+                    bestMove,
+                    Math.min(...Array.from(player2Moves).map((move2) => payoffMatrix[move][move2]))
+                ),
+            -Infinity
+        );
+
+        // Find player 2's best response to player 1's moves
+        const bestResponse2 = Array.from(player2Moves).reduce(
+            (bestMove, move) =>
+                Math.max(
+                    bestMove,
+                    Math.min(...Array.from(player1Moves).map((move1) => payoffMatrix[move1][move]))
+                ),
+            -Infinity
+        );
+
+        // Play the chosen moves simultaneously
+        const payoff1 = payoffMatrix[bestResponse1][bestResponse2];
+        const payoff2 = payoffMatrix[bestResponse2][bestResponse1];
+
+        // Update players' sets of possible moves
+        player1Moves.add(bestResponse2);
+        player2Moves.add(bestResponse1);
+
+        // Check if a stable outcome has been reached
+        if (!player1Moves.has(bestResponse2) && !player2Moves.has(bestResponse1)) {
+            return [payoff1, payoff2];
+        }
+    }
 }
