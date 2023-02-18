@@ -88,7 +88,7 @@ function App() {
       <>
         <div className="flex flex-col items-center justify-center">
           <p className="font-extrabold text-2xl">
-            Player 1 {gameRef.current.player_one.pv}pv
+            You {gameRef.current.player_one.pv}pv
           </p>
           <Board
             cards={gameRef.current.player_one.cards}
