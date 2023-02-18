@@ -38,7 +38,7 @@ function Board({
           </ul>
         ))}
       </div>
-      <div className="flex gap-2 w-full items-center justify-center">
+      <div className="flex flex-wrap gap-2 w-full items-center justify-center mb-2">
         {cards.map((c) => (
           <Card
             key={c}
@@ -97,56 +97,53 @@ function App() {
 
   return (
     <div className="min-h-screen flex flex-col justify-between p-5">
-      {!gameRef.current.done ? (
-        <>
-          <div className="flex flex-col items-center justify-center">
-            <p className="font-extrabold text-2xl">
-              Player 1 {gameRef.current.player_one.pv}pv
-            </p>
-            <Board
-              cards={gameRef.current.player_one.cards}
-              board={gameRef.current.player_one.board}
-              interactive={true}
-              handlePlay={handlePlay}
-            />
-          </div>
-          <div className="flex flex-col gap-3 items-center">
-            <Card
-              key={gameInfo.player_one_card + "p1"}
-              cardValue={gameInfo.player_one_card}
-              color={
-                "bg-gradient-to-t from-slate-400 via-slate-500 to-slate-600"
-              }
-              isInteractive={false}
-              handlePlay={function (c: number): void {
-                return;
-              }}
-            ></Card>
-            <Card
-              key={gameInfo.player_two_card + "p2"}
-              cardValue={gameInfo.player_two_card}
-              color={
-                "bg-gradient-to-t from-indigo-600 via-purple-500 to-pink-500"
-              }
-              isInteractive={false}
-              handlePlay={function (c: number): void {
-                return;
-              }}
-            ></Card>
-          </div>
-          <div className="flex flex-col items-center justify-center">
-            <p className="font-extrabold text-2xl">
-              Player 2 {gameRef.current.player_two.pv} pv
-            </p>
-            <Board
-              cards={gameRef.current.player_two.cards}
-              board={gameRef.current.player_two.board}
-              interactive={false}
-              handlePlay={(c: number) => undefined}
-            />
-          </div>
-        </>
-      ) : (
+      <>
+        <div className="flex flex-col items-center justify-center">
+          <p className="font-extrabold text-2xl">
+            Player 1 {gameRef.current.player_one.pv}pv
+          </p>
+          <Board
+            cards={gameRef.current.player_one.cards}
+            board={gameRef.current.player_one.board}
+            interactive={true}
+            handlePlay={handlePlay}
+          />
+        </div>
+        <div className="flex flex-col gap-3 items-center">
+          <Card
+            key={gameInfo.player_one_card + "p1"}
+            cardValue={gameInfo.player_one_card}
+            color={"bg-gradient-to-t from-slate-400 via-slate-500 to-slate-600"}
+            isInteractive={false}
+            handlePlay={function (c: number): void {
+              return;
+            }}
+          ></Card>
+          <Card
+            key={gameInfo.player_two_card + "p2"}
+            cardValue={gameInfo.player_two_card}
+            color={
+              "bg-gradient-to-t from-indigo-600 via-purple-500 to-pink-500"
+            }
+            isInteractive={false}
+            handlePlay={function (c: number): void {
+              return;
+            }}
+          ></Card>
+        </div>
+        <div className="flex flex-col items-center justify-center">
+          <p className="font-extrabold text-2xl">
+            Player 2 {gameRef.current.player_two.pv} pv
+          </p>
+          <Board
+            cards={gameRef.current.player_two.cards}
+            board={gameRef.current.player_two.board}
+            interactive={false}
+            handlePlay={(c: number) => undefined}
+          />
+        </div>
+      </>
+      {gameRef.current.done && (
         <p className="text-2xl font-extrabold">
           Winner is player {gameInfo.winner}
           <button
