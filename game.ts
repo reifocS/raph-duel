@@ -82,7 +82,7 @@ export class AiPlayerMinMax extends AiPlayer {
                 if (value > bestValue) {
                     bestValue = value;
                     bestCard = card_two;
-                } else if (value == bestValue && Math.random() > 0.5 && card_two !== DODGE) {
+                } else if (value == bestValue && Math.random() > 0.5) {
                     bestCard = card_two
                 }
             }
