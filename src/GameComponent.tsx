@@ -10,11 +10,13 @@ function Board({
   board,
   interactive,
   handlePlay,
+  selectedCard,
 }: {
   cards: number[];
   board: number[][];
   interactive: boolean;
   handlePlay: (c: number) => void;
+  selectedCard: number | null;
 }) {
   return (
     <>
@@ -26,6 +28,7 @@ function Board({
       <div className="flex flex-wrap gap-2 w-full items-center justify-center mb-2">
         {cards.map((c) => (
           <Card
+            selected={selectedCard === c}
             key={c}
             cardValue={c}
             color={
@@ -73,16 +76,23 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
     <div className="min-h-screen flex flex-col justify-between p-5">
       <>
         <div className="flex flex-col items-center justify-center">
-          <p className="font-extrabold text-2xl">You {game.player_one.pv}pv</p>
+          <p className="font-extrabold text-2xl">
+            You {game.player_one.pv}pv{" "}
+            {gameData.playerCard && !gameData.opponnentReady ? (
+              <span className="text-sm font-normal">waiting for opponent...</span>
+            ) : null}
+          </p>
           <Board
             cards={game.player_one.cards}
             board={game.player_one.board}
             interactive={true}
             handlePlay={handlePlay}
+            selectedCard={gameData.playerCard}
           />
         </div>
         <div className="flex flex-col gap-3 items-center">
           <Card
+            selected={false}
             key={playerLastCard + "p1"}
             cardValue={playerLastCard}
             color={"bg-gradient-to-t from-slate-400 via-slate-500 to-slate-600"}
@@ -93,6 +103,7 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
           ></Card>
 
           <Card
+            selected={false}
             key={opponentLastCard + "p2"}
             cardValue={opponentLastCard}
             color={
@@ -105,13 +116,20 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
           ></Card>
         </div>
         <div className="flex flex-col items-center justify-center">
-          <p className="font-extrabold text-2xl">
-            Player 2 {game.player_two.pv} pv
-          </p>
+          <div className="flex gap-2 items-center">
+            <p className="font-extrabold text-2xl">
+              Player 2 {game.player_two.pv} pv
+            </p>
+            {gameData.opponnentReady && (
+              <div className="h-[30px] w-[30px] bg-green-500 rounded-full"></div>
+            )}
+          </div>
+
           <Board
             cards={game.player_two.cards}
             board={game.player_two.board}
             interactive={false}
+            selectedCard={null}
             handlePlay={(c: number) => undefined}
           />
         </div>

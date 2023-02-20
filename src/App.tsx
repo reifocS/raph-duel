@@ -2,6 +2,7 @@ import { usePeerConnection } from "../hooks/usePeerConnection";
 import { useCallback, useEffect, useRef, useState } from "react";
 import GameComponent from "./GameComponent";
 import { Game } from "../game";
+import CopyIcon from "./Copy";
 
 const CONNECTION_STATUS = { DISCONNECTED: 0, JOINING: 1, CONNECTED: 2 };
 
@@ -75,25 +76,43 @@ function App() {
   const [destId, setDestId] = useState("");
 
   return (
-    <>
-      <h3>My peer ID is: {peer_state.id}</h3>
+    <body className="min-h-screen flex flex-col w-full overflow-x-hidden bg-gray-900 text-gray-200">
+      {peer_state.status != CONNECTION_STATUS.CONNECTED && (
+        <>
+          <h1 className="text-3xl text-center font-extrabold">RAPH DUEL</h1>
+
+          <div className="flex gap-2 p-3">
+            <h3>My peer ID is: {peer_state.id}</h3>
+            <CopyIcon value={peer_state.id} />
+          </div>
+        </>
+      )}
       {peer_state.status == CONNECTION_STATUS.JOINING && (
-        <div>
+        <div className="p-3 flex items-center gap-3">
           <p>Try joining by adding dest id</p>
-          <input
-            value={peer_state.dest_id}
-            onChange={({ target }) => setDestId(target.value)}
-          />
-          <button disabled={!destId} onClick={() => connect(destId)}>
-            Connect
-          </button>
+          <form
+          className="flex gap-2 items-center"
+            onSubmit={(e) => {
+              e.preventDefault();
+              connect(destId);
+            }}
+          >
+            <input
+              required
+              className="block p-2 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-xs focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              value={peer_state.dest_id}
+              onChange={({ target }) => setDestId(target.value)}
+            />
+            <button className="text-white bg-gradient-to-br from-purple-600 to-blue-500 hover:bg-gradient-to-bl focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
+              Connect
+            </button>
+          </form>
         </div>
       )}
       {peer_state.status == CONNECTION_STATUS.CONNECTED && (
         <>
-          <section>
-            <p>Connection established</p>
-            <div>Other: {peer_state.connection.peer}</div>
+          <section className="p-3 flex gap-2">
+            <p>Connection established with {peer_state.connection.peer}</p>
           </section>
           <GameComponent
             game={gameRef.current}
@@ -104,7 +123,7 @@ function App() {
           ;
         </>
       )}
-    </>
+    </body>
   );
 }
 
