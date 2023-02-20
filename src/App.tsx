@@ -76,7 +76,7 @@ function App() {
   const [destId, setDestId] = useState("");
 
   return (
-    <body className="min-h-screen flex flex-col w-full overflow-x-hidden bg-gray-900 text-gray-200">
+    <section className="min-h-screen flex flex-col w-full overflow-x-hidden bg-gray-900 text-gray-200">
       {peer_state.status != CONNECTION_STATUS.CONNECTED && (
         <>
           <h1 className="text-3xl text-center font-extrabold">RAPH DUEL</h1>
@@ -91,7 +91,7 @@ function App() {
         <div className="p-3 flex items-center gap-3">
           <p>Try joining by adding dest id</p>
           <form
-          className="flex gap-2 items-center"
+            className="flex gap-2 items-center"
             onSubmit={(e) => {
               e.preventDefault();
               connect(destId);
@@ -111,9 +111,7 @@ function App() {
       )}
       {peer_state.status == CONNECTION_STATUS.CONNECTED && (
         <>
-          <section className="p-3 flex gap-2">
-            <p>Connection established with {peer_state.connection.peer}</p>
-          </section>
+          <p>Connection established with {peer_state.connection.peer}</p>
           <GameComponent
             game={gameRef.current}
             send={send}
@@ -123,7 +121,7 @@ function App() {
           ;
         </>
       )}
-    </body>
+    </section>
   );
 }
 

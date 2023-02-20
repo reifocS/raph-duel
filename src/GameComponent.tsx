@@ -1,9 +1,11 @@
-import { useEffect, useRef, useState } from "react";
 import { Game } from "../game";
 import { Data, GameData } from "./App";
 import "./App.css";
 import Card from "./Card";
 import Stacking from "./Stacking";
+
+const colorP1 = "bg-indigo-800";
+const colorP2 = "bg-slate-500";
 
 function Board({
   cards,
@@ -33,8 +35,8 @@ function Board({
             cardValue={c}
             color={
               interactive
-                ? "bg-gradient-to-t from-slate-400 via-slate-500 to-slate-600"
-                : "bg-gradient-to-t from-indigo-600 via-purple-500 to-pink-500"
+                ? colorP1
+                : colorP2
             }
             isInteractive={interactive}
             handlePlay={handlePlay}
@@ -77,9 +79,11 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
       <>
         <div className="flex flex-col items-center justify-center">
           <p className="font-extrabold text-2xl">
-            You {game.player_one.pv}pv{" "}
+            You: {game.player_one.pv}pv{" "}
             {gameData.playerCard && !gameData.opponnentReady ? (
-              <span className="text-sm font-normal">waiting for opponent...</span>
+              <span className="text-sm font-normal">
+                waiting for opponent...
+              </span>
             ) : null}
           </p>
           <Board
@@ -95,7 +99,7 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
             selected={false}
             key={playerLastCard + "p1"}
             cardValue={playerLastCard}
-            color={"bg-gradient-to-t from-slate-400 via-slate-500 to-slate-600"}
+            color={colorP1}
             isInteractive={false}
             handlePlay={function (_: number): void {
               return;
@@ -107,7 +111,7 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
             key={opponentLastCard + "p2"}
             cardValue={opponentLastCard}
             color={
-              "bg-gradient-to-t from-indigo-600 via-purple-500 to-pink-500"
+              colorP2
             }
             isInteractive={false}
             handlePlay={function (_: number): void {
@@ -118,10 +122,10 @@ function GameComponent({ send, gameData, setGameData, game }: Props) {
         <div className="flex flex-col items-center justify-center">
           <div className="flex gap-2 items-center">
             <p className="font-extrabold text-2xl">
-              Player 2 {game.player_two.pv} pv
+              Your nemesis: {game.player_two.pv} pv
             </p>
             {gameData.opponnentReady && (
-              <div className="h-[30px] w-[30px] bg-green-500 rounded-full"></div>
+            " has played."
             )}
           </div>
 
