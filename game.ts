@@ -167,6 +167,17 @@ export class Game {
 
 type PayoffMatrix = number[][];
 
+/*
+By Convention the payoff matrix for a two player zero-sum game, shows the strategies for both players
+with the payoffs for the row player as entries. The payoffs for the column player for each situation can
+be calculated by taking the negative of the row player’s payoff.
+Recall that an Equilibrium Point of a game is a pair of strategies such that neither player has any
+incentive to change strategies if the other player stays with their current strategy. Note that in a zero
+sum game this corresponds to an entry in the matrix which is simultaneously the minimum in
+its row and the maximum in its column. To find such entries, we can calculate the minimum in
+each row and the maximum in each column and check if any entry simultaneously gives the minimum
+in its row and the maximum in its column.
+*/
 
 export function getPayOffMatrix(game: Game): PayoffMatrix {
     // Set up the payoff matrix

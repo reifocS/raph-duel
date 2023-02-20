@@ -8,7 +8,7 @@ type Props = {
 
 export default function Stacking(props: Props) {
   return (
-    <div className="relative text-center m-2 border-2 border-solid h-[60px] w-[30px] bg-slate-600 ">
+    <div className="relative text-center m-2 h-[60px] w-[30px] bg-slate-600 ">
       {props.cards.map((c, i) => (
         <motion.div
           layoutId={"board" + c + props.player}
